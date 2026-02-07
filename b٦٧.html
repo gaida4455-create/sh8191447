@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>درس الزخرفة بالحرف العربي</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --accent-color: #ff9800;
+            --bg-color: #f9fbf9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 8px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .lesson-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .gallery-item {
+            border: 3px solid #4fc3f7;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+            width: 30%;
+            min-width: 200px;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            display: block;
+        }
+
+        /* منطقة التفاعل */
+        .interactive-zone {
+            border: 2px dashed var(--accent-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #drawing-canvas {
+            background: #fff;
+            border: 1px solid #ccc;
+            cursor: crosshair;
+            touch-action: none;
+            max-width: 100%;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-clear { background: #f44336; color: white; }
+        .btn-save { background: var(--primary-color); color: white; }
+        
+        .instruction-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎨 ورشة الحروف العربية الزخرفية</h1>
+
+    <div class="lesson-text">
+        <p>لنتخير حرفاً من حروفنا العربية ولنقم بعمل تشكيلات زخرفية منه على سطح ورقة الكراسة باستخدام التكرار، وبالأسلوب الذي نرغب به.</p>
+        <p>وقد عمل الفنان التشكيلي على الحرف العربي لإنتاج أشكال زخرفية متنوعة. فلنلاحظ الأشكال الآتية:</p>
+    </div>
+
+    <div class="gallery">
+        <div class="gallery-item">
+           <img src="https://i.postimg.cc/mDLK5Ntd/image1.png" alt="نموذج زخرفي 1">
+        </div>
+        <div class="gallery-item">
+            <img src="https://i.postimg.cc/Jz36CHVR/image2.png" alt="Q">
+        </div>
+        <div class="gallery-item">
+            <img src="https://i.postimg.cc/44DRJcM3/image3.png" alt="E">
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="interactive-zone">
+        <span class="instruction-badge">جرب الآن</span>
+        <h3>ارسم حرفك المختار وزخرفه هنا:</h3>
+        <canvas id="drawing-canvas" width="600" height="400"></canvas>
+        
+        <div class="controls">
+            <input type="color" id="colorPicker" value="#2e7d32">
+            <button class="btn-clear" onclick="clearCanvas()">مسح اللوحة</button>
+            <button class="btn-save" onclick="saveImage()">حفظ عملي</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('drawing-canvas');
+    const ctx = canvas.getContext('2d');
+    const colorPicker = document.getElementById('colorPicker');
+    let painting = false;
+
+    function startPosition(e) {
+        painting = true;
+        draw(e);
+    }
+
+    function finishedPosition() {
+        painting = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        if (!painting) return;
+        
+        // التعامل مع اللمس والماوس
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = colorPicker.value;
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+    
+    // دعم أجهزة اللمس
+    canvas.addEventListener('touchstart', startPosition);
+    canvas.addEventListener('touchend', finishedPosition);
+    canvas.addEventListener('touchmove', draw);
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function saveImage() {
+        const link = document.createElement('a');
+        link.download = 'my-arabic-art.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+</script>
+
+</body>
+</html>
